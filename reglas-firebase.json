@@ -1,0 +1,23 @@
+{
+  "rules": {
+    "ca": {
+      ".read": true,
+      "$col": {
+        "$doc": {
+          ".write": true,
+          ".validate": "newData.child('j').isString() && newData.child('j').val().length < 100000 && newData.child('t').isNumber()"
+        }
+      }
+    },
+    "room": {
+      ".read": true,
+      "$peer": {
+        ".write": true,
+        ".validate": "!newData.exists() || (newData.child('j').isString() && newData.child('j').val().length < 20000)"
+      }
+    },
+    "locks": {
+      "$lock": { ".read": true, ".write": true }
+    }
+  }
+}
