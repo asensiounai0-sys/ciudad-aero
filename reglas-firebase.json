@@ -17,7 +17,17 @@
       }
     },
     "locks": {
-      "$lock": { ".read": true, ".write": true }
+      "$lock": {
+        ".read": true,
+        ".write": true
+      }
+    },
+    "acc": {
+      "$a": {
+        ".read": true,
+        ".write": "!data.exists()",
+        ".validate": "newData.hasChildren(['n','s','h','u'])"
+      }
     }
   }
 }

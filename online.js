@@ -23,6 +23,70 @@
   let UID = localStorage.getItem('ciudadAeroUid');
   if (!UID) { UID = 'u_' + rnd(20); localStorage.setItem('ciudadAeroUid', UID); }
 
+  /* ---------- cuentas: usuario + contraseña ---------- */
+  const ACC = localStorage.getItem('ciudadAeroAcc');
+  const GUEST = localStorage.getItem('ciudadAeroGuest') === '1';
+  let authOk; const authed = new Promise(r => authOk = r);
+  if (ACC || GUEST) authOk();
+  window.CIUDAD_ACCOUNT = ACC || null;
+  window.CIUDAD_LOGOUT = () => { ['ciudadAeroAcc', 'ciudadAeroGuest', 'ciudadAeroSave', 'ciudadAeroChar', 'ciudadAeroUid'].forEach(k => localStorage.removeItem(k)); location.reload(); };
+  async function sha(txt) { const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(txt)); return Array.from(new Uint8Array(b), x => x.toString(16).padStart(2, '0')).join(''); }
+  const accKey = n => n.trim().toLowerCase().replace(/[^a-z0-9_ñ]/g, '');
+  function loginScreen() {
+    const css = document.createElement('style');
+    css.textContent = `#lgWrap{position:fixed;inset:0;z-index:99;display:flex;align-items:center;justify-content:center;padding:16px;background:radial-gradient(ellipse at 50% 20%,rgba(255,255,255,.35),rgba(10,90,140,.55));backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);font-family:Nunito,system-ui,sans-serif}
+#lgBox{width:min(380px,100%);padding:20px 20px 16px;border-radius:26px;background:linear-gradient(180deg,rgba(255,255,255,.92),rgba(220,245,255,.88));border:2px solid #fff;box-shadow:0 12px 40px rgba(0,60,110,.35),inset 0 1px 0 #fff;text-align:center;color:#0b3d62}
+#lgBox img{width:min(300px,90%);border-radius:18px;margin:0 auto 8px;display:block}
+#lgBox h2{margin:4px 0 12px;font-size:20px;font-weight:900}
+.lgTabs{display:flex;gap:6px;margin-bottom:12px}.lgTabs button{flex:1;padding:9px;border-radius:14px;border:2px solid #fff;font:900 14px Nunito,sans-serif;color:#0b3d62;background:rgba(255,255,255,.6);cursor:pointer}.lgTabs button.on{background:linear-gradient(180deg,#bff0ff,#3cb6e6);color:#fff;text-shadow:0 1px 2px rgba(0,60,110,.5)}
+#lgBox input{width:100%;box-sizing:border-box;margin:5px 0;padding:12px 14px;border-radius:14px;border:2px solid #bfe6f8;font:800 15px Nunito,sans-serif;color:#0b3d62;background:#fff;outline:none}#lgBox input:focus{border-color:#3cb6e6}
+.lgGo{width:100%;margin-top:8px;padding:12px;border:2px solid #fff;border-radius:16px;font:900 16px Nunito,sans-serif;color:#fff;cursor:pointer;background:linear-gradient(180deg,#b6f5a0,#2a9d3a 55%,#3ab84a);text-shadow:0 1px 2px rgba(0,60,0,.5);box-shadow:0 4px 12px rgba(0,90,40,.3)}
+.lgGuest{margin-top:10px;background:none;border:none;color:#0a6fb0;font:800 13px Nunito,sans-serif;text-decoration:underline;cursor:pointer}
+#lgMsg{min-height:18px;font-weight:800;font-size:13px;color:#d63a6a;margin-top:6px}`;
+    document.head.appendChild(css);
+    const w = document.createElement('div'); w.id = 'lgWrap';
+    w.innerHTML = `<div id="lgBox"><img src="logo.png" alt="Ciudad Aero"><div class="lgTabs"><button data-m="in" class="on">Iniciar sesión</button><button data-m="new">Crear cuenta</button></div>
+<input id="lgUser" maxlength="16" placeholder="Usuario" autocomplete="username" autocapitalize="off"><input id="lgPass" type="password" maxlength="40" placeholder="Contraseña" autocomplete="current-password">
+<input id="lgPass2" type="password" maxlength="40" placeholder="Repite la contraseña" autocomplete="new-password" hidden>
+<button class="lgGo" id="lgGo">Entrar</button><div id="lgMsg"></div><button class="lgGuest" id="lgGuest">Jugar sin cuenta (solo en este dispositivo)</button></div>`;
+    document.body.appendChild(w);
+    let modo = 'in'; const $l = id => document.getElementById(id), msg = t => { $l('lgMsg').textContent = t; };
+    w.querySelectorAll('.lgTabs button').forEach(b => b.onclick = () => { modo = b.dataset.m; w.querySelectorAll('.lgTabs button').forEach(x => x.classList.toggle('on', x === b)); $l('lgPass2').hidden = modo !== 'new'; $l('lgGo').textContent = modo === 'new' ? 'Crear cuenta' : 'Entrar'; msg(''); });
+    ['lgUser', 'lgPass', 'lgPass2'].forEach(id => $l(id).addEventListener('keydown', e => { e.stopPropagation(); if (e.key === 'Enter') $l('lgGo').click(); }));
+    ['keyup', 'keypress'].forEach(ev => w.addEventListener(ev, e => e.stopPropagation()));
+    $l('lgGuest').onclick = () => { localStorage.setItem('ciudadAeroGuest', '1'); w.remove(); authOk(); };
+    let busy = false;
+    $l('lgGo').onclick = async () => {
+      if (busy) return; const name = $l('lgUser').value.trim(), key = accKey(name), pass = $l('lgPass').value;
+      if (key.length < 3) return msg('El usuario necesita al menos 3 letras o números');
+      if (pass.length < 4) return msg('La contraseña necesita al menos 4 caracteres');
+      if (modo === 'new' && pass !== $l('lgPass2').value) return msg('Las contraseñas no coinciden');
+      busy = true; msg('Conectando…');
+      try {
+        const db = await boot(); const ref = db.ref('acc').child(key);
+        if (modo === 'new') {
+          const salt = rnd(16), h = await sha(salt + ':' + pass);
+          const r = await ref.transaction(cur => cur ? undefined : { n: name.slice(0, 16), s: salt, h, u: UID, t: Date.now() });
+          if (!r || !r.committed) { busy = false; return msg('Ese usuario ya existe, elige otro'); }
+          localStorage.setItem('ciudadAeroAcc', name.slice(0, 16)); localStorage.removeItem('ciudadAeroGuest');
+          window.CIUDAD_ACCOUNT = name.slice(0, 16); w.remove(); authOk();
+        } else {
+          const a = (await ref.once('value')).val();
+          if (!a) { busy = false; return msg('Ese usuario no existe'); }
+          if (await sha(a.s + ':' + pass) !== a.h) { busy = false; return msg('Contraseña incorrecta'); }
+          localStorage.setItem('ciudadAeroAcc', a.n || name); localStorage.removeItem('ciudadAeroGuest');
+          if (a.u !== UID) { // otra cuenta: cargamos su partida desde el servidor
+            localStorage.setItem('ciudadAeroUid', a.u); localStorage.removeItem('ciudadAeroSave'); localStorage.removeItem('ciudadAeroChar');
+            msg('¡Hola de nuevo! Cargando tu partida…'); setTimeout(() => location.reload(), 300); return;
+          }
+          window.CIUDAD_ACCOUNT = a.n || name; w.remove(); authOk();
+        }
+      } catch (e) { busy = false; msg('No se pudo conectar. Revisa internet o la configuración de Firebase.'); }
+    };
+    setTimeout(() => $l('lgUser').focus(), 100);
+  }
+  if (!ACC && !GUEST) { if (document.body) loginScreen(); else addEventListener('DOMContentLoaded', loginScreen); }
+
   const clean = s => String(s).replace(/[.#$\[\]]/g, '_');
   // "a/b" -> colección "a", doc "b" · "a/b/c/d" -> colección "a|b|c", doc "d"
   const split = path => { const p = path.split('/').filter(Boolean); return { col: p.slice(0, -1).map(clean).join('|'), id: clean(p[p.length - 1]) }; };
@@ -119,7 +183,7 @@
   const USER = { id: async () => UID, can: async () => true, isOwner: () => false };
   window.claude = {
     use: async name => {
-      const db = await boot();
+      await authed; const db = await boot();
       if (name === 'db') return DBo || (DBo = makeDB(db));
       if (name === 'room') return ROOMo || (ROOMo = makeRoom(db));
       if (name === 'user') return USER;

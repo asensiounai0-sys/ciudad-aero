@@ -7,8 +7,8 @@
 <meta name="description" content="Ciudad Aero: un juego chill con estética Frutiger Aero, minijuegos, casas decorables y mucho estilo.">
 <meta name="theme-color" content="#2fa6ea">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
-<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -24,7 +24,8 @@
 *{box-sizing:border-box;margin:0;padding:0}
 [hidden]{display:none!important}
 html,body{height:100%;overflow:hidden;background:#0a5a86;font-family:"Nunito","Segoe UI",sans-serif;color:#0b3d62;touch-action:none;user-select:none;-webkit-user-select:none}
-#c{display:block;width:100vw;height:100vh;position:fixed;inset:0}
+#c{display:block;width:100vw;height:100vh;position:fixed;left:0;top:0}
+html,body{overflow:hidden;overscroll-behavior:none}
 .glass{background:linear-gradient(180deg,rgba(255,255,255,.9),rgba(215,246,255,.66) 50%,rgba(160,228,250,.6));border:2px solid rgba(255,255,255,.95);border-radius:24px;box-shadow:0 10px 30px rgba(0,60,110,.35),inset 0 2px 0 #fff;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
 .pill{padding:8px 16px;font-weight:900;font-size:18px;display:flex;align-items:center;gap:8px;border-radius:999px}
 .hud{position:fixed;z-index:2;display:flex;gap:10px}
@@ -270,7 +271,7 @@ img.emo{vertical-align:middle;margin:0 1px}
 <!-- HUD plaza -->
 <div class="hud" id="pHudL" style="flex-direction:column;align-items:flex-start"><div class="glass pill"><span class="pearl"></span><span id="bal">0</span></div><div class="glass pill" id="onlineHud" hidden style="font-size:13px"></div><div class="glass pill" id="questHud" hidden style="font-size:14px"></div></div>
 <div class="hud" id="pHudR"><div class="glass pill click" id="emoBtn" title="Emotes (G)">💃</div><div class="glass pill click" id="chatBtn" title="Chat" style="position:relative">💬<span id="chatBadge" class="cbadge" hidden></span></div><div class="glass pill click" id="nextBtn" title="Siguiente canción" hidden>⏭</div><div class="glass pill click" id="musBtn" title="Música">🔊</div><div class="glass pill click" id="menuBtn" title="Móvil">📱 Móvil</div></div>
-<audio id="bgm" src="audio/musica.mp3" loop preload="auto"></audio>
+<audio id="bgm" src="musica.mp3" loop preload="auto"></audio>
 <button class="btn" id="act" hidden>Entrar</button>
 <div id="qbox"><div id="qlog" title="Abrir chat global"></div><form id="qForm" class="glass"><button type="button" class="emoBtn" id="qEmo" title="Emojis y stickers">😊</button><input id="qIn" maxlength="300" placeholder="Chat rápido… (Enter)" autocomplete="off"><button class="qsend" title="Enviar">➤</button></form></div>
 <div id="picker" class="glass" hidden></div>
@@ -438,8 +439,8 @@ img.emo{vertical-align:middle;margin:0 1px}
 const cv=document.getElementById('c'), ctx0=cv.getContext('2d');
 let ctx=ctx0;
 let W,H,DPR;
-function resize(){ DPR=Math.min(2,devicePixelRatio||1); W=innerWidth; H=innerHeight; cv.width=W*DPR; cv.height=H*DPR; }
-addEventListener('resize',resize); resize();
+function resize(){ DPR=Math.min(2,devicePixelRatio||1); const vv=window.visualViewport; W=Math.round(vv?vv.width:innerWidth)||innerWidth; H=Math.round(vv?vv.height:innerHeight)||innerHeight; cv.width=W*DPR; cv.height=H*DPR; cv.style.width=W+'px'; cv.style.height=H+'px'; }
+addEventListener('resize',resize); addEventListener('orientationchange',()=>setTimeout(resize,250)); if(window.visualViewport) visualViewport.addEventListener('resize',resize); resize();
 const hash=i=>{const x=Math.sin(i*127.1+311.7)*43758.5453;return x-Math.floor(x);};
 function rr(c,x,y,w,h,r){c.beginPath();c.moveTo(x+r,y);c.arcTo(x+w,y,x+w,y+h,r);c.arcTo(x+w,y+h,x,y+h,r);c.arcTo(x,y+h,x,y,r);c.arcTo(x,y,x+w,y,r);c.closePath();}
 function el(x,y,rx,ry,col){ctx.fillStyle=col;ctx.beginPath();ctx.ellipse(x,y,rx,ry,0,0,7);ctx.fill();}
@@ -3008,6 +3009,8 @@ function renderApp(){
     const f=document.createElement('form'); f.className='phAdd'; const inp=document.createElement('input'); inp.className='codeIn'; inp.maxLength=14; inp.value=SAVE.name||''; inp.placeholder='Tu nombre'; inp.addEventListener('keydown',e=>e.stopPropagation());
     f.append(inp,phBtn('Guardar','',()=>{})); f.onsubmit=e=>{ e.preventDefault(); SAVE.name=inp.value.trim().slice(0,14)||'Jugador'; saveAll(); if(typeof MYP!=='undefined'&&MYP){ MYP.name=SAVE.name; saveProfile(); } submitScore().then(fetchRank); toast('Nombre guardado'); };
     const h=document.createElement('h4'); h.textContent='Tu nombre'; scr.append(h,f);
+    if(!window.FIREBASE_CONFIG) scr.appendChild(phRow('⬇️','Música para GitHub','Descarga musica.zip',phBtn('Descargar','blue',downloadMusic)));
+    if(window.CIUDAD_ONLINE) scr.appendChild(phRow('🔑','Cuenta',window.CIUDAD_ACCOUNT||'Invitado (sin cuenta)',phBtn(window.CIUDAD_ACCOUNT?'Cerrar sesión':'Iniciar sesión','pink',()=>{ if(!window.CIUDAD_ACCOUNT){ localStorage.removeItem('ciudadAeroGuest'); location.reload(); return; } toast('Guardando tu partida…'); try{ saveAll(); }catch(e){} setTimeout(window.CIUDAD_LOGOUT,3200); })));
     scr.appendChild(phRow('🎵','Música',musOn?'Activada':'Desactivada',phBtn(musOn?'Apagar':'Encender','blue',()=>{ $('musBtn').click(); renderApp(); })));
     scr.appendChild(phRow('🪪','Tu código de amigo',typeof MYP!=='undefined'&&MYP&&MYP.code?'#'+MYP.code:'Necesitas iniciar sesión'));
     scr.appendChild(phRow('🎮','Controles','WASD / flechas · E entrar · Enter chat · G emotes')); }
@@ -3434,6 +3437,18 @@ function drawHouseStation(s){
   c.restore(); sign(s.x,s.y-138,'🏠 Mi casa','#5fd35f');
 }
 
+/* ---------- descargar la música (zip con musica.mp3) ---------- */
+function zipStore(name,bytes){ const T=new Uint32Array(256); for(let n=0;n<256;n++){ let c=n; for(let k=0;k<8;k++) c=c&1?0xEDB88320^(c>>>1):c>>>1; T[n]=c>>>0; }
+  let crc=0xFFFFFFFF; for(let i=0;i<bytes.length;i++) crc=T[(crc^bytes[i])&255]^(crc>>>8); crc=(crc^0xFFFFFFFF)>>>0;
+  const nm=new TextEncoder().encode(name), sz=bytes.length;
+  const lh=new DataView(new ArrayBuffer(30)); [[0,0x04034b50,4],[4,20,2],[6,0,2],[8,0,2],[10,0,2],[12,0x21,2],[14,crc,4],[18,sz,4],[22,sz,4],[26,nm.length,2],[28,0,2]].forEach(([o,v,l])=>l===4?lh.setUint32(o,v,true):lh.setUint16(o,v,true));
+  const cd=new DataView(new ArrayBuffer(46)); [[0,0x02014b50,4],[4,20,2],[6,20,2],[8,0,2],[10,0,2],[12,0,2],[14,0x21,2],[16,crc,4],[20,sz,4],[24,sz,4],[28,nm.length,2],[30,0,2],[32,0,2],[34,0,2],[36,0,2],[38,0,4],[42,0,4]].forEach(([o,v,l])=>l===4?cd.setUint32(o,v,true):cd.setUint16(o,v,true));
+  const off=30+nm.length+sz, end=new DataView(new ArrayBuffer(22)); [[0,0x06054b50,4],[4,0,2],[6,0,2],[8,1,2],[10,1,2],[12,46+nm.length,4],[16,off,4],[20,0,2]].forEach(([o,v,l])=>l===4?end.setUint32(o,v,true):end.setUint16(o,v,true));
+  return new Blob([lh.buffer,nm,bytes,cd.buffer,nm,end.buffer],{type:'application/zip'}); }
+async function downloadMusic(){ let dl=null; try{ dl=window.claude&&claude.use?await claude.use('downloads'):null; }catch(e){}
+  if(!dl){ toast('Aquí no se puede descargar'); return; } toast('Preparando la música…');
+  try{ const bytes=new Uint8Array(await (await fetch('musica.mp3')).arrayBuffer()); await dl.save({filename:'musica.zip',data:zipStore('musica.mp3',bytes)}); toast('✅ Guardado: descomprime musica.zip y sube musica.mp3'); }
+  catch(e){ toast(e&&e.code==='declined'?'Descarga cancelada':'No se pudo descargar ('+((e&&e.code)||'error')+')'); } }
 /* ---------- códigos ---------- */
 function openCodes(){ $('codeIn').value=''; $('codeMsg').textContent=''; open('codes'); setTimeout(()=>$('codeIn').focus(),60); }
 $('codeForm').onsubmit=e=>{ e.preventDefault(); const v=$('codeIn').value.trim().toLowerCase(); $('codeIn').value='';
@@ -3454,7 +3469,7 @@ bgm.addEventListener('ended',nextSong);
 async function analyzeSongs(){
   if(analyzing||SONGS) return; analyzing=true;
   try{
-    const buf=await (await fetch('audio/musica.mp3')).arrayBuffer();
+    const buf=await (await fetch('musica.mp3')).arrayBuffer();
     // copia local del audio para poder saltar a cualquier canción
     try{ const url=URL.createObjectURL(new Blob([buf.slice(0)],{type:'audio/mpeg'})); const t0=bgm.currentTime, was=!bgm.paused; bgm.src=url;
       await new Promise(r=>{ bgm.addEventListener('loadedmetadata',r,{once:true}); setTimeout(r,4000); }); try{ bgm.currentTime=t0; }catch(e){} if(was&&musOn) bgm.play().catch(()=>{}); }catch(e){}

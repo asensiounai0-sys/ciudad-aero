@@ -28,14 +28,14 @@ El juego usa **Firebase Realtime Database** (gratis) como servidor.
 1. Entra en https://console.firebase.google.com y crea un proyecto (por ejemplo `ciudad-aero`). Puedes desactivar Google Analytics.
 2. En el menú: **Compilación → Realtime Database → Crear base de datos** → elige la ubicación (Bélgica, `europe-west1`) → **Empezar en modo de prueba**.
 3. Arriba verás una dirección como `https://ciudad-aero-xxxx-default-rtdb.europe-west1.firebasedatabase.app`. Cópiala.
-4. Pestaña **Reglas** → borra lo que haya y pega el contenido de `reglas-firebase.json` → **Publicar**.
+4. Pestaña **Reglas** → borra lo que haya y pega el contenido de `reglas-firebase.json` → **Publicar**. (Incluye las cuentas de usuario.)
 5. Abre `config.js` y pega la dirección entre las comillas de `databaseURL`. Sube el archivo a GitHub.
 
 ¡Listo! Todos los que abran el juego estarán en el mismo servidor.
 
 ## 🎵 Música
 
-`audio/musica.mp3` trae 6 temas chill que suenan en orden aleatorio. Puedes cambiarlo por otro archivo con el mismo nombre: el juego detecta las canciones por los silencios entre ellas.
+`musica.mp3` trae 6 temas chill que suenan en orden aleatorio. Puedes cambiarlo por otro archivo con el mismo nombre: el juego detecta las canciones por los silencios entre ellas.
 
 ## ℹ️ Nota
 
