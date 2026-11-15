@@ -5,5 +5,5 @@
    Si lo dejas vacío, el juego funciona en solitario.
    ========================================================= */
 window.FIREBASE_CONFIG = {
-  databaseURL: ""
+  databaseURL: "https://ciudad-aero-default-rtdb.europe-west1.firebasedatabase.app"
 };
