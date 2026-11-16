@@ -172,7 +172,7 @@
     return {
       presence: async patch => {
         mine = Object.assign({}, mine, patch); for (const k in mine) if (mine[k] === null || mine[k] === undefined) delete mine[k];
-        if (timer) return; const wait = Math.max(0, 150 - (Date.now() - lastAt)); timer = setTimeout(send, wait);
+        if (timer) return; const gap = (typeof MPG !== 'undefined' && MPG.fast) ? 70 : 150; const wait = Math.max(0, gap - (Date.now() - lastAt)); timer = setTimeout(send, wait);
       },
       onPeers: (f) => { subs.add(f); setTimeout(() => f({ peers: Object.values(peers), joined: Object.values(peers), updated: [], left: [] }), 0); return () => subs.delete(f); },
       peers: () => Object.values(peers), connected: () => true, emit: async () => { }, on: () => () => { }
