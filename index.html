@@ -6400,7 +6400,7 @@ function applyPeer(p){
   o.seen=now; if(o.sc&&o.sc!==sc){ o.x=num(pr.x,o.x); o.y=num(pr.y,o.y); } o.sc=sc; o.hown=typeof pr.h==='string'?pr.h.slice(0,80):null; o.st=sc==='house'&&pr.st&&typeof pr.st==='object'&&['sit','bed','bath'].includes(pr.st.k)?{k:pr.st.k,sy:num(pr.st.sy,0),i:num(pr.st.i,-1)|0}:null; o.tx=num(pr.x,o.x); o.ty=num(pr.y,o.y); o.f=pr.f===-1?-1:1; o.mv=!!pr.mv; o.by=p.by||(typeof pr.u==='string'?pr.u.slice(0,80):null);
   o.gm=pr.gm&&typeof pr.gm==='object'&&typeof pr.gm.g==='string'&&JSON.stringify(pr.gm).length<12000?pr.gm:null;
   try{ itPeer(o,pr); }catch(e){}
-  o.ty=pr.ty===1; o.name=typeof pr.n==='string'&&pr.n.trim()?pr.n.slice(0,14):'Jugador'; o.code=typeof pr.c==='string'?pr.c.replace(/\D/g,'').slice(0,4):'';
+  o.typn=pr.ty===1; o.name=typeof pr.n==='string'&&pr.n.trim()?pr.n.slice(0,14):'Jugador'; o.code=typeof pr.c==='string'?pr.c.replace(/\D/g,'').slice(0,4):'';
   if(pr.ch&&typeof pr.ch==='object'){ o.ch=cleanCh(pr.ch); } else if(!o.ch) o.ch=Object.assign({},DEF);
   if(pr.jp&&pr.jp!==o.jpRaw){ o.jpRaw=pr.jp; const ago=(Date.now()-num(pr.jp,0))/1000; if(ago>=0&&ago<1) o.jt=now-ago; }
   o.em=pr.em&&typeof pr.em==='object'&&EMOTES[pr.em.id]?{id:pr.em.id,t0:now-Math.max(0,Math.min(60,(Date.now()-num(pr.em.t,Date.now()))/1000))}:null;
@@ -6437,7 +6437,7 @@ function pushOthers(items,vis){
 function drawOthersSay(){ for(const id in OTHERS){ const o=OTHERS[id]; if(o.sc!==mode||!o.say) continue; if(now-o.say.t>6){ o.say=null; continue; } drawSayObj(o.say,o.x,o.y-100,o.ch); } }
 /* ---- "escribiendo…": puntos suspensivos sobre quien escribe ---- */
 function amTyping(){ const a=document.activeElement; if(!a||(a.id!=='qIn'&&a.id!=='chIn')) return false; return !!(a.value&&a.value.trim()); }
-const TYPERS=new Set(); setInterval(()=>{ TYPERS.clear(); try{ for(const id in OTHERS){ const o=OTHERS[id]; if(o.ty) TYPERS.add(o.name+'#'+o.code); } }catch(e){} },200);
+const TYPERS=new Set(); setInterval(()=>{ TYPERS.clear(); try{ for(const id in OTHERS){ const o=OTHERS[id]; if(o.typn) TYPERS.add(o.name+'#'+o.code); } }catch(e){} },200);
 function typDots(x,y){ const c=ctx; c.save(); c.globalAlpha=.95; c.fillStyle='rgba(255,255,255,.95)'; rr(c,x-24,y-14,48,26,13); c.fill(); c.beginPath(); c.moveTo(x-6,y+11); c.lineTo(x,y+19); c.lineTo(x+5,y+11); c.closePath(); c.fill(); c.strokeStyle='rgba(94,200,245,.9)'; c.lineWidth=2; rr(c,x-24,y-14,48,26,13); c.stroke();
   for(let i=0;i<3;i++){ const b=Math.max(0,Math.sin(now*7-i*.9))*4; c.fillStyle='#2a6ad8'; c.beginPath(); c.arc(x-12+i*12,y-1-b,3.6,0,7); c.fill(); } c.restore(); }
 function nameTag(x,y,name,code){ if(TYPERS.size&&TYPERS.has(name+'#'+(code||''))){ try{ typDots(x,y-140); }catch(e){} } return nameTag0(x,y,name,code); }
