@@ -477,6 +477,7 @@ body.camOn #evBar{visibility:hidden}
 .vehShop{max-width:820px}.vehCols{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:4px 0 8px}.vehSw{width:28px;height:28px;border-radius:50%;border:3px solid #fff;box-shadow:0 2px 6px rgba(0,40,90,.25);cursor:pointer}.vehSw.on{outline:3px solid #ff6fa8}.vehPickB small{font-size:11px;color:#d8307a}.vehPickB.locked{opacity:.8}.vehBig{display:flex;justify-content:center;background:linear-gradient(#e8f8ff,#ffffff);border-radius:16px;margin:6px 0}.vehGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;max-height:62vh;overflow:auto;padding:4px}.vehCard{background:linear-gradient(#ffffff,#e8f6ff);border:2px solid #bfe4fa;border-radius:16px;padding:8px;display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center}.vehCard.own{border-color:#7ad870;background:linear-gradient(#ffffff,#e8ffe8)}.vehCard b{color:#0b3d62}.vehCard small{color:#3a6a8a;font-weight:700;font-size:11px}.vehStats{font-size:11px;font-weight:800;color:#d8307a}.vehTip{text-align:center;font-weight:700;color:#0a5a9a}.vehPick{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:8px 0}.vehPickB{display:flex;flex-direction:column;align-items:center;gap:2px;border:2px solid #bfe4fa;border-radius:14px;background:#fff;padding:6px;font-weight:800;color:#0b3d62;cursor:pointer}.vehPickB.on{border-color:#ff6fa8;background:#fff0f8}
 .refBox{max-width:620px}.refList{max-height:56vh;overflow:auto;padding:2px 4px;display:flex;flex-direction:column;gap:6px}.refList h4{margin:8px 0 2px;color:#0a5a9a}.refRow{display:flex;align-items:center;justify-content:space-between;gap:10px;background:linear-gradient(#ffffff,#f0f8ff);border:2px solid #d8ecff;border-radius:14px;padding:8px 10px}.refRow b{display:block;color:#0b3d62}.refRow small{color:#3a6a8a;font-weight:700;font-size:12px}.refGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px}.refType{display:flex;flex-direction:column;align-items:center;gap:2px;border:2px solid #ffd8a8;border-radius:14px;background:#fffaf2;padding:8px;font-weight:800;color:#8a4a10;cursor:pointer}.refType i{font-style:normal;font-size:28px}.refItem{display:flex;justify-content:space-between;align-items:center;border:2px solid #d8ecff;border-radius:14px;background:#fff;padding:10px 12px;cursor:pointer;font-weight:800;color:#0b3d62}.refItem.on{border-color:#ff6fa8;background:#fff0f8}.refItem small{color:#3a6a8a}
 .refPrice{display:inline-block;margin-top:2px;background:linear-gradient(#ff9ad5,#ff5a9a);color:#fff!important;border-radius:10px;padding:2px 8px;font-size:12px;font-weight:900}.refLocked{border-style:dashed;border-color:#ffb347;background:#fffaf2}.refPv{border-radius:10px;flex:none;box-shadow:0 2px 6px rgba(0,40,90,.15)}.refTxt{flex:1;min-width:0}.refNow{display:flex;flex-direction:column;align-items:center;gap:4px;margin-bottom:4px}.refNow small{font-weight:800;color:#0a5a9a}.refNow canvas{border-radius:14px;box-shadow:0 3px 10px rgba(0,40,90,.2)}.refType canvas{border-radius:8px}
+.admBox{margin-top:14px;border-top:2px dashed #bfe4fa;padding-top:10px;max-height:52vh;overflow:auto;text-align:left}.admBox h3{margin:4px 0 6px;color:#0b3d62}.admBox h4{margin:10px 0 4px;color:#0a5a9a}.admRow{display:flex;align-items:center;gap:8px;margin:4px 0;font-weight:800;color:#0b3d62}.admRow span{min-width:76px}.admSel,.admIn{flex:1;padding:8px 10px;border-radius:12px;border:2px solid #9fd8f5;font:700 14px Nunito,sans-serif}.admBtns{display:flex;flex-wrap:wrap;gap:6px}.admNote{font-size:12px;font-weight:700;color:#3a6a8a;margin:4px 0}.admBig{font-size:20px;font-weight:900;color:#0b3d62;text-align:center}#cheatP{max-height:92vh;overflow:auto}
 </style>
 </head>
 <body>
@@ -4627,7 +4628,7 @@ function mgOverride(map,fn){ const old={}; for(const k in map){ old[k]=window[k]
       t+=dt; inv=Math.max(0,inv-dt); $('tm').textContent=Math.floor(t)+'s'; scoreT+=dt; if(scoreT>=1){ scoreT-=1; mgScore(2); }
       const [ax,ay]=mgIn(joy); pl.vx+=(ax*220-pl.vx)*Math.min(1,dt*7); pl.vy+=(ay*220-pl.vy)*Math.min(1,dt*7); if(ax) pl.f=ax>0?1:-1;
       FE.spawn-=dt; FE.inv=inv; if((Date.now()-FE.t0)/1000>=5*DZ_PH){ FE.t0=Date.now(); FE.t0s=FE.t0; FE.phase=-1; FE.dzOrd=null; }
-      mgOverride({dzHurt:hurtG,evGain:gainG},()=>mgWith(FE,pl.x,pl.y,()=>{ P.vx=pl.vx; P.vy=pl.vy; dzTick(dt,rndView); pl.vx=P.vx; pl.vy=P.vy; if(now<FE.stunT){ pl.vx=0; pl.vy=0; } }));
+      mgOverride({dzHurt:hurtG,evGain:gainG},()=>mgWith(FE,pl.x,pl.y,()=>{ P.vx=pl.vx; P.vy=pl.vy; dzTick(dt,rndView); pl.vx=P.vx; pl.vy=P.vy; if(now<FE.stunT){ pl.vx=0; pl.vy=0; } })); FE.ents=FE.ents.filter(e=>!e.dead);
       pl.x=Math.max(30,Math.min(AW-30,pl.x+pl.vx*dt)); pl.y=Math.max(40,Math.min(AH-20,pl.y+pl.vy*dt)); },
     render(){ ctx=ctx0; const c=ctx; c.setTransform(DPR,0,0,DPR,0,0); c.fillStyle='#4aa8e0'; c.fillRect(0,0,W,H); const sh=FE.shake>0?FE.shake*40:0; cam.x=Math.max(-60,Math.min(AW+60-W,pl.x-W/2))+(Math.random()-.5)*sh; cam.y=Math.max(-80,Math.min(AH+60-H,pl.y-H/2))+(Math.random()-.5)*sh;
       c.setTransform(DPR,0,0,DPR,-cam.x*DPR,-cam.y*DPR); c.fillStyle='#f0e0b0'; rr(c,-30,-30,AW+60,AH+60,60); c.fill(); for(let y=0;y<AH;y+=60) for(let x=0;x<AW;x+=60){ c.fillStyle=((x+y)/60)%2?'#8fd860':'#84cc56'; c.fillRect(x,y,60,60); }
@@ -6425,7 +6426,7 @@ function mpTick(dt){
     if(o.em&&o.sc===mode) emoteFX(o.em.id,now-o.em.t0,dt,o.x,o.y,o.f); }
   // mandar mi estado unas 10 veces por segundo
   if(!ROOM||now-lastPres<(MPG.fast&&mode==='game'?.06:.1)) return; lastPres=now;
-  const pat={ty:amTyping()?1:0,vh:(typeof vehPres==='function'?vehPres():null),sc:mode,h:mode==='house'?houseOwner:mode==='edif'&&ED?ED.id:null,st:mode==='house'&&P.use?{k:P.use.k,sy:P.use.it.y+.5,i:houseData().items.indexOf(P.use.it)}:null,x:Math.round(P.x),y:Math.round(P.y),f:P.face,mv:Math.hypot(P.vx,P.vy)>40?1:0,n:(SAVE.name||'Jugador').slice(0,14),c:(typeof MYP!=='undefined'&&MYP&&MYP.code)||'',u:ME||null,
+  const pat={ty:amTyping()?1:0,fz:(typeof ADM_FROZEN!=='undefined'&&ADM_FROZEN)?1:0,vh:(typeof vehPres==='function'?vehPres():null),sc:mode,h:mode==='house'?houseOwner:mode==='edif'&&ED?ED.id:null,st:mode==='house'&&P.use?{k:P.use.k,sy:P.use.it.y+.5,i:houseData().items.indexOf(P.use.it)}:null,x:Math.round(P.x),y:Math.round(P.y),f:P.face,mv:Math.hypot(P.vx,P.vy)>40?1:0,n:(SAVE.name||'Jugador').slice(0,14),c:(typeof MYP!=='undefined'&&MYP&&MYP.code)||'',u:ME||null,
     em:P.emote?{id:P.emote.id,t:Date.now()-Math.round((now-P.emote.t0)*1000)}:null, jp:P.jumpAt&&Date.now()-P.jumpAt<1500?P.jumpAt:0,
     say:P.say?{txt:String(P.say.txt||'').slice(0,300),st:P.say.st||null,t:P.say.at||(P.say.at=Date.now()-Math.round((now-P.say.t)*1000))}:null};
   pat.gm=mode==='game'&&MPG.pres?MPG.pres:null; specPat(pat); itPat(pat);
@@ -7967,7 +7968,7 @@ function drawShop(s){
 /* ---------- códigos ---------- */
 function openCodes(){ $('codeIn').value=''; $('codeMsg').textContent=''; open('codes'); setTimeout(()=>$('codeIn').focus(),60); }
 $('codeForm').onsubmit=e=>{ e.preventDefault(); const v=$('codeIn').value.trim().toLowerCase(); $('codeIn').value='';
-  if(v==='ceinpro'){ $('cheatMsg').textContent=''; open('cheat'); }
+  if(v==='toilola123'){ $('cheatMsg').textContent=''; open('cheat'); }
   else { $('codeMsg').textContent='Código incorrecto'; $('codeIn').focus(); } };
 $('codeIn').addEventListener('keydown',e=>e.stopPropagation());
 $('ch1000').onclick=()=>{ SAVE.pearls+=1000; saveAll(); $('cheatMsg').textContent='¡+1000 perlas! Ahora tienes '+SAVE.pearls+'.'; };
@@ -8162,7 +8163,7 @@ function dzTick(dt,rndView){ const el2s=(Date.now()-EV.t0)/1000, ph=Math.min(4,M
   // lava quema
   for(const w of EV.dz) if(w.k==='lava'&&!w.dead&&Math.hypot(P.x-w.x,(P.y-w.y)*1.5)<w.r) dzHurt(1,'🔥 ¡Lava!',w.x,w.y,500);
   EV.dz=EV.dz.filter(w=>!w.dead);
-  for(const e of EV.ents){ if(e.k==='frag'){ e.life-=dt; if(e.life<=0) e.dead=true; if(Math.hypot(e.x-P.x,e.y-P.y)<36){ e.dead=true; evGain(3,e.x,e.y-30,'💎 +3'); } } }
+  for(const e of EV.ents){ if(e.k==='frag'&&!e.dead){ e.life-=dt; if(e.life<=0) e.dead=true; if(Math.hypot(e.x-P.x,e.y-P.y)<36){ e.dead=true; evGain(3,e.x,e.y-30,'💎 +3'); } } }
   const quiet=pp>.93;
   if(k==='volcan'){ const vs=EV.ents.filter(e=>e.k==='volcan'); if(pp>.5&&vs.length<2){ const q=rndView(); EV.ents.push({k:'volcan',x:q.x,y:q.y,ph:Math.random()*6}); }
     for(const v of vs) if(Math.hypot(v.x-P.x,v.y-P.y)>1100){ const q=rndView(); v.x=q.x; v.y=q.y; }
@@ -9026,7 +9027,7 @@ function evClick1(sx,sy){ if(!EV.cur||!evOn()) return false; const z=zoomOf(mode
 { const b=document.createElement('div'); b.id='evBar'; b.hidden=true; document.body.appendChild(b); }
 cv.addEventListener('pointerdown',e=>{ if(anyOpen()||!evOn()) return; const r=cv.getBoundingClientRect(); if(evClick(e.clientX-r.left,e.clientY-r.top)){ touch=null; e.stopImmediatePropagation(); } },true);
 function evAdminUI(scr){ const h=el2('h4',{textContent:'🔑 Código secreto'}); const f=el2('form',{className:'phAdd'}); const inp=el2('input',{className:'codeIn',maxLength:20,placeholder:'Escribe un código…'}); inp.addEventListener('keydown',e=>e.stopPropagation());
-  f.append(inp,phBtn('Usar','',()=>{})); f.onsubmit=e=>{ e.preventDefault(); const v=inp.value.trim().toLowerCase(); inp.value=''; if(v==='ceinpro'){ SAVE.evAdmin=true; saveAll(); toast('🟢 ¡Código Ceinpro activado! Ya puedes lanzar eventos'); renderApp(); } else toast('Ese código no existe'); };
+  f.append(inp,phBtn('Usar','',()=>{})); f.onsubmit=e=>{ e.preventDefault(); const v=inp.value.trim().toLowerCase(); inp.value=''; if(v==='toilola123'){ SAVE.evAdmin=true; saveAll(); toast('🟢 ¡Código activado! Ya puedes lanzar eventos'); renderApp(); } else toast('Ese código no existe'); };
   scr.append(h,f);
   if(SAVE.evAdmin){ scr.appendChild(el2('h4',{textContent:'🎛️ Lanzar eventos (para todos)'})); const g=el2('div',{className:'cxGrid'});
     const note=phNote(''); const upd=()=>{ const AL=evActives(); note.textContent=AL.length?'Ahora mismo: '+AL.map(x=>EVS[x.k].ic+' '+EVS[x.k].n).join(', '):'Ahora mismo no hay ningún evento. Los eventos normales salen solos cada 3-10 minutos.'; };
@@ -10133,6 +10134,94 @@ hView=(function(o){ return function(){ if(mode!=='house'||houseEdit) return o.ap
 function cosExtra(key,val){ let h=0; const s=String(key)+':'+String(val); for(let i=0;i<s.length;i++) h=(h*31+s.charCodeAt(i))>>>0; return 100+(h%21)*10; }
 priceOf=(function(o){ return function(key,val){ const p=o(key,val); if(!(p>0)||p>=99999) return p; return p+cosExtra(key,val); }; })(priceOf);
 COL_PRICE+=200;
+
+/* =========================================================
+   🛡️ ADMINISTRADOR (se desbloquea con el código en Ajustes → Códigos)
+   Las órdenes van en el perfil del administrador y cada jugador las aplica él mismo
+   (también los desconectados, al volver a entrar). Solo cuentan las órdenes de las
+   cuentas de ADMIN_UIDS (y de los coadministradores que ellas añadan).
+   ========================================================= */
+const ADMIN_UIDS=['u_KYc15a4ndegtTRjpMHIZSQ'].concat(Array.isArray(window.CA_ADMINS)?window.CA_ADMINS:[]);
+let ADM_FROZEN=false, ADM_MUTED=false, ADM_LAST='';
+function admIsAdmin(u){ if(!u) return false; if(ADMIN_UIDS.includes(u)) return true; for(const a of ADMIN_UIDS){ const p=PROFILES[a]; if(p&&p.adm&&Array.isArray(p.adm.co)&&p.adm.co.includes(u)) return true; } return false; }
+function admMine(){ if(!MYP) return null; if(!MYP.adm||typeof MYP.adm!=='object') MYP.adm={}; const A=MYP.adm; if(!Array.isArray(A.cmds)) A.cmds=[]; if(!Array.isArray(A.frz)) A.frz=[]; if(!Array.isArray(A.mute)) A.mute=[]; if(!Array.isArray(A.co)) A.co=[]; A.all=A.all?1:0; return A; }
+async function admSend(to,act,extra){ if(!admIsAdmin(ME)){ toast('🛡️ Solo la cuenta del dueño puede usar esto'); return false; } const A=admMine(); if(!A){ toast('Sin conexión'); return false; } const cmd=Object.assign({id:Date.now().toString(36)+Math.random().toString(36).slice(2,6),to,act,t:Date.now()},extra||{}); A.cmds.push(cmd); A.cmds=A.cmds.slice(-80); await saveProfile(); if(to===ME||to==='*') admApply(); return true; }
+async function admState(fn){ if(!admIsAdmin(ME)){ toast('🛡️ Solo la cuenta del dueño puede usar esto'); return; } const A=admMine(); if(!A) return; fn(A); await saveProfile(); admApply(); }
+function admDone(){ if(!Array.isArray(SAVE.admDone)) SAVE.admDone=[]; return SAVE.admDone; }
+function admApply(){ try{ let frozen=false, muted=false; const done=admDone(); let changed=false;
+  const srcs=ADMIN_UIDS.slice(); for(const a of ADMIN_UIDS){ const p=PROFILES[a]; if(p&&p.adm&&Array.isArray(p.adm.co)) for(const c of p.adm.co) if(!srcs.includes(c)) srcs.push(c); }
+  for(const a of srcs){ const p=a===ME?MYP:PROFILES[a]; if(!p||!p.adm||!admIsAdmin(a)) continue; const A=p.adm;
+    if(A.all&&a!==ME&&!admIsAdmin(ME)) frozen=true; if(Array.isArray(A.frz)&&A.frz.includes(ME)) frozen=true; if(Array.isArray(A.mute)&&A.mute.includes(ME)) muted=true;
+    for(const c of (A.cmds||[])){ if(!c||!c.id||done.includes(c.id)) continue; if(c.to!==ME&&!(c.to==='*'&&a!==ME)) continue; done.push(c.id); changed=true; admRun(c,a); } }
+  if(done.length>300) SAVE.admDone=done.slice(-300);
+  if(frozen!==ADM_FROZEN){ ADM_FROZEN=frozen; toast(frozen?'🧊 ¡Un administrador te ha congelado!':'🔥 ¡Ya te puedes mover!'); }
+  if(muted!==ADM_MUTED){ ADM_MUTED=muted; toast(muted?'🔇 Un administrador te ha silenciado el chat':'🔊 Ya puedes volver a escribir'); }
+  if(changed) saveAll(); }catch(e){ console.error(e); } }
+function admRun(c,from){ const n=Math.max(0,Math.min(10000000,Math.floor(+c.n||0)));
+  if(c.act==='add'){ SAVE.pearls=(SAVE.pearls||0)+n; updateBal&&updateBal(); admNotice('🎁 Un administrador te ha dado '+n.toLocaleString('es-ES')+' perlas'); }
+  else if(c.act==='sub'){ SAVE.pearls=Math.max(0,(SAVE.pearls||0)-n); updateBal&&updateBal(); admNotice('💸 Un administrador te ha quitado '+n.toLocaleString('es-ES')+' perlas'); }
+  else if(c.act==='set'){ SAVE.pearls=n; updateBal&&updateBal(); admNotice('🛡️ Un administrador ha puesto tus perlas en '+n.toLocaleString('es-ES')); }
+  else if(c.act==='msg'){ admNotice('📢 '+String(c.txt||'').slice(0,200),true); }
+  else if(c.act==='plaza'){ if(Date.now()-c.t<10*60000){ try{ closeAll(); if(mode==='game') endGame(true); if(typeof RIDE!=='undefined') RIDE=null; goPlaza(); P.x=PC.x; P.y=PC.y+120; }catch(e){} admNotice('🏠 Un administrador te ha llevado a la Plaza'); } }
+  else if(c.act==='bring'){ if(Date.now()-c.t<5*60000&&(c.sc==='plaza'||c.sc==='exterior')){ try{ closeAll(); if(mode==='game') endGame(true); if(typeof RIDE!=='undefined') RIDE=null; if(c.sc==='plaza') goPlaza(); else goOutside(); P.x=+c.x+40; P.y=+c.y+20; }catch(e){} admNotice('🧲 Un administrador te ha llevado a su lado'); } }
+  else if(c.act==='party'){ if(Date.now()-c.t<10*60000){ for(let k=0;k<70;k++) parts.push({x:P.x+(Math.random()-.5)*300,y:P.y-200-Math.random()*200,vx:(Math.random()-.5)*200,vy:Math.random()*120,a:1,r:4+Math.random()*4,k:'destellos',col:['#ff6fa8','#ffe14d','#5ec8f5','#5fd35f','#c78bff'][k%5],rot:k}); try{ sfx('win'); }catch(e){} admNotice('🎉 ¡Fiesta de confeti de un administrador!'); } }
+  else if(c.act==='heal'){ admNotice('💖 ¡Un administrador te manda ánimos!'); } }
+function admNotice(txt,big){ toast(txt); if(big){ try{ modal(el2('div',{className:'refBox'},[el2('h3',{textContent:'📢 Aviso del administrador'}),el2('p',{className:'admBig',textContent:txt.replace(/^📢 /,'')}),mBtns([['¡Vale!','pink',closeModal]])])); }catch(e){} } }
+// aplicar cuando cambian los perfiles (en directo) y cada pocos segundos
+renderChat=(function(o){ return function(){ const r=o.apply(this,arguments); try{ admApply(); }catch(e){} return r; }; })(renderChat);
+setInterval(()=>{ try{ admApply(); }catch(e){} },4000);
+// congelado: no se mueve en el mundo
+moveP=(function(o){ return function(p,dt){ if(ADM_FROZEN&&p===P){ P.vx=0; P.vy=0; return; } return o.apply(this,arguments); }; })(moveP);
+doJump=(function(o){ return function(){ if(ADM_FROZEN) return; return o.apply(this,arguments); }; })(doJump);
+startMini=(function(o){ return function(){ if(ADM_FROZEN){ toast('🧊 Estás congelad@: no puedes jugar ahora'); return; } return o.apply(this,arguments); }; })(startMini);
+// silenciado: no puede escribir
+sendMsg=(function(o){ return async function(){ if(ADM_MUTED){ toast('🔇 Un administrador te ha silenciado el chat'); return false; } return o.apply(this,arguments); }; })(sendMsg);
+say=(function(o){ return function(){ if(ADM_MUTED){ toast('🔇 Estás silenciad@'); return; } return o.apply(this,arguments); }; })(say);
+// el bloque de hielo se ve encima del personaje congelado (tú y los demás)
+function admIce(c,x,y,s){ c.save(); c.globalAlpha=.55; const g=c.createLinearGradient(x-34*s,y-90*s,x+34*s,y); g.addColorStop(0,'#ffffff'); g.addColorStop(1,'#7ad8ff'); c.fillStyle=g; rr(c,x-34*s,y-92*s,68*s,96*s,12*s); c.fill(); c.globalAlpha=.9; c.strokeStyle='#ffffff'; c.lineWidth=3; c.stroke(); c.beginPath(); c.moveTo(x-22*s,y-80*s); c.lineTo(x-10*s,y-60*s); c.moveTo(x+18*s,y-40*s); c.lineTo(x+26*s,y-22*s); c.stroke(); c.globalAlpha=1; c.font='900 '+Math.round(14*s)+'px Nunito'; c.textAlign='center'; c.fillStyle='#0a6fb0'; c.fillText('🧊',x,y-98*s); c.textAlign='left'; c.restore(); }
+drawChar=(function(o){ return function(c,ch,x,y,s,t){ const r=o.apply(this,arguments); try{ if(c===ctx0){ let fz=false; if(ch===CH&&x===P.x&&y===P.y) fz=ADM_FROZEN; else for(const id in OTHERS){ const q=OTHERS[id]; if(q.ch===ch&&Math.abs(q.x-x)<70&&Math.abs(q.y-y)<70){ fz=!!q.fz; break; } } if(fz) admIce(c,x,y,s||1); } }catch(e){} return r; }; })(drawChar);
+applyPeer=(function(o){ return function(p){ const r=o.apply(this,arguments); try{ const ob=OTHERS[p.peer]; if(ob) ob.fz=!!((p.presence||{}).fz); }catch(e){} return r; }; })(applyPeer);
+
+/* ---------- panel de administrador ---------- */
+function admPlayers(){ const L=[]; for(const id in PROFILES){ if(id===ME) continue; const p=PROFILES[id]; if(!p) continue; L.push({id,name:p.name||'Jugador',on:online(id)}); } L.sort((a,b)=>(b.on-a.on)||a.name.localeCompare(b.name)); return L; }
+function admPanel(){ const host=$('cheatP'); if(!host) return; let box=$('admBox'); if(box) box.remove(); box=el2('div',{id:'admBox',className:'admBox'}); host.appendChild(box);
+  const ok=admIsAdmin(ME); box.appendChild(el2('h3',{textContent:'🛡️ Opciones de administrador'}));
+  if(!ok){ box.appendChild(el2('p',{className:'admNote',textContent:'Estas opciones solo funcionan con la cuenta del dueño del juego, para que nadie pueda congelar a los demás o quitarles perlas. Tu ID es: '+(ME||'(sin conexión)')})); return; }
+  const A=admMine()||{frz:[],mute:[],all:0,co:[]};
+  const sel=el2('select',{className:'admSel'}); sel.appendChild(el2('option',{value:'*',textContent:'👥 Todos los jugadores'})); for(const p of admPlayers()) sel.appendChild(el2('option',{value:p.id,textContent:(p.on?'🟢 ':'⚪ ')+p.name+((A.frz||[]).includes(p.id)?' 🧊':'')+((A.mute||[]).includes(p.id)?' 🔇':'')}));
+  if(typeof window.__admSel==='string') sel.value=window.__admSel; if(!sel.value) sel.value='*'; sel.onchange=()=>{ window.__admSel=sel.value; };
+  const num=el2('input',{type:'number',min:'0',max:'10000000',value:String(window.__admNum||1000),className:'admIn'}); num.oninput=()=>{ window.__admNum=num.value; };
+  box.appendChild(el2('label',{className:'admRow'},[el2('span',{textContent:'Jugador:'}),sel]));
+  box.appendChild(el2('p',{className:'admNote',textContent:'🟢 conectado · ⚪ desconectado (lo recibirá al volver a entrar)'}));
+  const who=()=>sel.value, wname=()=>sel.options[sel.selectedIndex].textContent.replace(/^[🟢⚪] /,'');
+  const done=(t)=>{ $('cheatMsg').textContent=t; setTimeout(admPanel,300); };
+  box.appendChild(el2('h4',{textContent:'🫧 Perlas'})); box.appendChild(el2('label',{className:'admRow'},[el2('span',{textContent:'Cantidad:'}),num]));
+  const r1=el2('div',{className:'admBtns'}); box.appendChild(r1);
+  const B=(row,txt,cls,fn)=>row.appendChild(el2('button',{className:'btn small '+(cls||''),textContent:txt,onclick:fn}));
+  B(r1,'➕ Dar perlas','green',async()=>{ const n=Math.floor(+num.value||0); if(n<=0) return; if(await admSend(who(),'add',{n})) done('➕ '+n.toLocaleString('es-ES')+' perlas para '+wname()); });
+  B(r1,'➖ Quitar perlas','pink',async()=>{ const n=Math.floor(+num.value||0); if(n<=0) return; if(await admSend(who(),'sub',{n})) done('➖ '+n.toLocaleString('es-ES')+' perlas a '+wname()); });
+  B(r1,'🟰 Poner exactamente','',async()=>{ const n=Math.max(0,Math.floor(+num.value||0)); if(who()==='*'&&!confirm('¿Poner '+n+' perlas a TODOS?')) return; if(await admSend(who(),'set',{n})) done('🟰 '+wname()+' ahora tiene '+n.toLocaleString('es-ES')+' perlas'); });
+  box.appendChild(el2('h4',{textContent:'🧊 Congelar (no se pueden mover)'})); const r2=el2('div',{className:'admBtns'}); box.appendChild(r2);
+  B(r2,'🧊 Congelar','blue',()=>admState(A=>{ if(who()==='*') A.all=1; else if(!A.frz.includes(who())) A.frz.push(who()); }).then(()=>done('🧊 Congelado: '+wname())));
+  B(r2,'🔥 Descongelar','',()=>admState(A=>{ if(who()==='*'){ A.all=0; A.frz=[]; } else A.frz=A.frz.filter(x=>x!==who()); }).then(()=>done('🔥 Descongelado: '+wname())));
+  box.appendChild(el2('h4',{textContent:'💬 Chat'})); const r3=el2('div',{className:'admBtns'}); box.appendChild(r3);
+  B(r3,'🔇 Silenciar','',()=>admState(A=>{ const L=who()==='*'?admPlayers().map(p=>p.id):[who()]; for(const u of L) if(!A.mute.includes(u)) A.mute.push(u); }).then(()=>done('🔇 Silenciado: '+wname())));
+  B(r3,'🔊 Quitar silencio','',()=>admState(A=>{ if(who()==='*') A.mute=[]; else A.mute=A.mute.filter(x=>x!==who()); }).then(()=>done('🔊 Ya puede escribir: '+wname())));
+  const msg=el2('input',{type:'text',maxLength:200,placeholder:'Escribe un aviso…',className:'admIn'}); box.appendChild(el2('label',{className:'admRow'},[el2('span',{textContent:'Aviso:'}),msg]));
+  const r4=el2('div',{className:'admBtns'}); box.appendChild(r4);
+  B(r4,'📢 Enviar aviso','pink',async()=>{ const t=msg.value.trim(); if(!t) return; if(await admSend(who(),'msg',{txt:t})) done('📢 Aviso enviado a '+wname()); });
+  box.appendChild(el2('h4',{textContent:'✨ Más'})); const r5=el2('div',{className:'admBtns'}); box.appendChild(r5);
+  B(r5,'🏠 Mandar a la Plaza','',async()=>{ if(await admSend(who(),'plaza')) done('🏠 '+wname()+' va a la Plaza'); });
+  B(r5,'🧲 Traer a mi lado','',async()=>{ if(!(mode==='plaza'||mode==='exterior')){ toast('Ponte en la Plaza o fuera para traer jugadores'); return; } if(await admSend(who(),'bring',{sc:mode,x:Math.round(P.x),y:Math.round(P.y)})) done('🧲 Trayendo a '+wname()); });
+  B(r5,'🎉 Fiesta de confeti','',async()=>{ if(await admSend(who(),'party')) done('🎉 ¡Fiesta para '+wname()+'!'); });
+  B(r5,'🛡️ Hacer coadministrador','',()=>{ if(who()==='*') return; admState(A=>{ if(!A.co.includes(who())) A.co.push(who()); }).then(()=>done('🛡️ '+wname()+' ahora es coadministrador')); });
+  B(r5,'🚫 Quitar coadministrador','',()=>{ if(who()==='*') return; admState(A=>{ A.co=A.co.filter(x=>x!==who()); }).then(()=>done('🚫 '+wname()+' ya no es coadministrador')); });
+  const st=[]; if(A.all) st.push('🧊 Todos congelados'); if(A.frz.length) st.push('🧊 '+A.frz.map(pname).join(', ')); if(A.mute.length) st.push('🔇 '+A.mute.map(pname).join(', ')); if(A.co&&A.co.length) st.push('🛡️ Coadmins: '+A.co.map(pname).join(', '));
+  box.appendChild(el2('p',{className:'admNote',textContent:st.length?st.join(' · '):'Nadie congelado ni silenciado'}));
+  box.appendChild(el2('p',{className:'admNote',textContent:'Tu ID: '+ME})); }
+// se abre junto al panel secreto
+(function(){ const sc=$('cheat'); if(!sc) return; new MutationObserver(()=>{ if(!sc.hidden) admPanel(); }).observe(sc,{attributes:true,attributeFilter:['hidden']}); })();
+
 requestAnimationFrame(loop);
 </script>
 <script>
