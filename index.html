@@ -6562,7 +6562,7 @@ function buildOutfits(box){
    MÓVIL AERO CON APPS
    ========================================================= */
 const APPS=[
-  ['juegos','🎮','Juegos','#5fd35f','#2a9d3a'],['chat','💬','Chat','#5ec8f5','#0a8fe0'],['amigos','👥','Amigos','#ff9ad5','#e8508a'],['mapa','🗺️','Mapa','#7ae0c0','#0ab8a8'],
+  ['admin','🛡️','Admin','#ffe0a0','#e85a2a'],['juegos','🎮','Juegos','#5fd35f','#2a9d3a'],['chat','💬','Chat','#5ec8f5','#0a8fe0'],['amigos','👥','Amigos','#ff9ad5','#e8508a'],['mapa','🗺️','Mapa','#7ae0c0','#0ab8a8'],
   ['tienda','🛍️','Tienda','#ffb0d8','#ff6fa8'],['vestidor','👕','Vestidor','#fff0a0','#f0b020'],['emotes','💃','Emotes','#d8c8ff','#8a5ad8'],['ranking','🏆','Ranking','#bdf0ff','#3cb6e6'],
   ['musica','🎵','Música','#a8dcff','#1a5ab8'],['tama','🥚','TamaAero','#c8ffc8','#2aa84a'],['aerojuegos','🎮','AeroJuegos','#d8ecff','#2a6ad8'],['coleccion','🐟','Colección','#b0f0d8','#2a9d6a'],['codigos','🎟️','Códigos','#f0c0ff','#8a5ad8'],['casa','🏠','Mi casa','#b6f5a0','#2a9d3a'],['camara','📸','Cámara','#ffe0a0','#ff8a3a'],['galeria','🖼️','Galería','#d8f0ff','#5a8ae8'],['aerogram','🫧','AeroGram','#ffd0f0','#c04fe0'],['fotoed','🪄','Editar fotos','#c8f0ff','#2aa8f0'],['paint','🎨','Paint','#fff0c0','#ff8a1a'],['aerodraw','✏️','AeroDraw','#e0ffc0','#6aa800'],['ajustes','⚙️','Ajustes','#e8eef8','#7a8aa8']
 ];
@@ -6576,7 +6576,7 @@ function renderPhone(){
     hi.innerHTML='<div class="phClock">'+d.toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'})+'</div><div class="phDate"></div>'; const ds=d.toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long'}); hi.querySelector('.phDate').textContent=ds.charAt(0).toUpperCase()+ds.slice(1);
     scr.appendChild(hi);
     const g=document.createElement('div'); g.className='phGrid'; scr.appendChild(g);
-    for(const [id,ic,name,c1,c2] of APPS){ const a=document.createElement('button'); a.className='app';
+    for(const [id,ic,name,c1,c2] of APPS.filter(q=>q[0]!=='admin'||(typeof admIsAdmin==='function'&&admIsAdmin(ME)))){ const a=document.createElement('button'); a.className='app';
       const i=document.createElement('div'); i.className='appIc'; i.style.background='linear-gradient(180deg,'+c1+' 0%,'+c2+' 100%)'; i.textContent=ic;
       if(id==='chat'||id==='amigos'||id==='aerogram'){ const n=id==='chat'?(+$('chatBadge').textContent||0):id==='aerogram'?AG_BADGE:0; if(n){ const b=document.createElement('span'); b.className='appBadge'; b.textContent=n; i.appendChild(b); } }
       const l=document.createElement('small'); l.textContent=name; a.append(i,l); a.onclick=()=>launch(id); g.appendChild(a); }
@@ -6584,7 +6584,7 @@ function renderPhone(){
   renderApp();
 }
 function launch(id){
-  const direct={aerojuegos:()=>{ closeAll(); ugOpenHub(); },tama:()=>{ closeAll(); tamaOpen(); },chat:()=>openChat(),tienda:()=>{ goTo('shop'); openShop(); },vestidor:()=>{ goTo('mirror'); openEdit(); },ranking:()=>openRank(),codigos:()=>openCodes(),emotes:()=>{ closeAll(); openEmoPanel(); },casa:()=>{ goHouse(ME); },camara:()=>openCamera(),fotoed:()=>{ pcShow(); appFotos(); },paint:()=>{ pcShow(); appPaint(); },aerodraw:()=>{ pcShow(); if(vecProjects().length){ openPC(); vecOpenDlg(); } else appVector(null); }};
+  const direct={admin:()=>{ if(!(typeof admIsAdmin==='function'&&admIsAdmin(ME))){ toast('Esta app no está disponible'); return; } $('cheatMsg').textContent=''; open('cheat'); },aerojuegos:()=>{ closeAll(); ugOpenHub(); },tama:()=>{ closeAll(); tamaOpen(); },chat:()=>openChat(),tienda:()=>{ goTo('shop'); openShop(); },vestidor:()=>{ goTo('mirror'); openEdit(); },ranking:()=>openRank(),codigos:()=>openCodes(),emotes:()=>{ closeAll(); openEmoPanel(); },casa:()=>{ goHouse(ME); },camara:()=>openCamera(),fotoed:()=>{ pcShow(); appFotos(); },paint:()=>{ pcShow(); appPaint(); },aerodraw:()=>{ pcShow(); if(vecProjects().length){ openPC(); vecOpenDlg(); } else appVector(null); }};
   if(direct[id]){ direct[id](); return; }
   phoneApp=id; renderPhone();
 }
@@ -7968,8 +7968,10 @@ function drawShop(s){
 /* ---------- códigos ---------- */
 function openCodes(){ $('codeIn').value=''; $('codeMsg').textContent=''; open('codes'); setTimeout(()=>$('codeIn').focus(),60); }
 $('codeForm').onsubmit=e=>{ e.preventDefault(); const v=$('codeIn').value.trim().toLowerCase(); $('codeIn').value='';
-  if(v==='toilola123'){ $('cheatMsg').textContent=''; open('cheat'); }
+  const fn=CODES[v]; if(fn){ fn(); }
   else { $('codeMsg').textContent='Código incorrecto'; $('codeIn').focus(); } };
+// códigos para el futuro: CODES['codigo']=()=>{ ... }
+const CODES={};
 $('codeIn').addEventListener('keydown',e=>e.stopPropagation());
 $('ch1000').onclick=()=>{ SAVE.pearls+=1000; saveAll(); $('cheatMsg').textContent='¡+1000 perlas! Ahora tienes '+SAVE.pearls+'.'; };
 $('chAll').onclick=()=>{ for(const k in OPTS){ SAVE.own[k]=OPTS[k].map(o=>o[0]); } SAVE.cols=COLORS.slice(); saveAll(); $('cheatMsg').textContent='¡Ya tienes todos los cosméticos! Míralos en el Vestidor.'; };
@@ -10141,7 +10143,7 @@ COL_PRICE+=200;
    (también los desconectados, al volver a entrar). Solo cuentan las órdenes de las
    cuentas de ADMIN_UIDS (y de los coadministradores que ellas añadan).
    ========================================================= */
-const ADMIN_UIDS=['u_KYc15a4ndegtTRjpMHIZSQ'].concat(Array.isArray(window.CA_ADMINS)?window.CA_ADMINS:[]);
+const ADMIN_UIDS=['u_KYc15a4ndegtTRjpMHIZSQ','u_RxVZkf5XqmWoqktxybpf'].concat(Array.isArray(window.CA_ADMINS)?window.CA_ADMINS:[]);
 let ADM_FROZEN=false, ADM_MUTED=false, ADM_LAST='';
 function admIsAdmin(u){ if(!u) return false; if(ADMIN_UIDS.includes(u)) return true; for(const a of ADMIN_UIDS){ const p=PROFILES[a]; if(p&&p.adm&&Array.isArray(p.adm.co)&&p.adm.co.includes(u)) return true; } return false; }
 function admMine(){ if(!MYP) return null; if(!MYP.adm||typeof MYP.adm!=='object') MYP.adm={}; const A=MYP.adm; if(!Array.isArray(A.cmds)) A.cmds=[]; if(!Array.isArray(A.frz)) A.frz=[]; if(!Array.isArray(A.mute)) A.mute=[]; if(!Array.isArray(A.co)) A.co=[]; A.all=A.all?1:0; return A; }
@@ -10222,6 +10224,18 @@ function admPanel(){ const host=$('cheatP'); if(!host) return; let box=$('admBox
 // se abre junto al panel secreto
 (function(){ const sc=$('cheat'); if(!sc) return; new MutationObserver(()=>{ if(!sc.hidden) admPanel(); }).observe(sc,{attributes:true,attributeFilter:['hidden']}); })();
 
+
+/* ----- 🛡️ app Admin: lanzar eventos y sin códigos en Ajustes ----- */
+function evAdminUI(scr){ }
+admPanel=(function(o){ return function(){ o(); try{ const box=$('admBox'); if(!box||!admIsAdmin(ME)) return; box.appendChild(el2('h4',{textContent:'🎛️ Lanzar eventos (para todos)'})); const g=el2('div',{className:'admBtns'}); const note=el2('p',{className:'admNote'});
+  const upd=()=>{ const AL=evActives(); note.textContent=AL.length?'Ahora mismo: '+AL.map(x=>EVS[x.k].ic+' '+EVS[x.k].n).join(', '):'Ahora no hay ningún evento. Los normales salen solos cada 3-10 minutos.'; };
+  for(const k of EV_KEYS){ const ev=EVS[k]; g.appendChild(el2('button',{className:'btn small'+(k==='corrupcion'?' pink':''),textContent:ev.ic+' '+ev.n.replace(/[¡!]/g,''),onclick:()=>{ evTrigger(k); setTimeout(upd,60); }})); }
+  g.appendChild(el2('button',{className:'btn small blue',textContent:'⏹️ Terminar todos los eventos',onclick:()=>{ evTrigger('stop'); setTimeout(upd,60); }})); box.appendChild(g); upd(); box.appendChild(note); }catch(e){ console.error(e); } }; })(admPanel);
+(function(){ const p=$('cheatP'); if(!p) return; const h=p.querySelector('h2'); if(h) h.textContent='🛡️ Admin'; const s=p.querySelector('.sub'); if(s) s.textContent='Esta app solo la ves tú (y tus coadministradores).'; })();
+
+/* ----- 🛡️ botón de administrador arriba (solo admins) ----- */
+(function(){ const b=document.createElement('div'); b.className='glass pill click'; b.id='admBtn'; b.title='Admin'; b.textContent='🛡️ Admin'; b.hidden=true; b.style.cssText='font-weight:900'; b.onclick=e=>{ e.stopPropagation(); launch('admin'); }; const L=$('pHudL'); if(L) L.appendChild(b); else document.body.appendChild(b);
+  const upd=()=>{ try{ b.hidden=!(typeof admIsAdmin==='function'&&admIsAdmin(ME)); }catch(e){} }; upd(); setInterval(upd,2000); })();
 requestAnimationFrame(loop);
 </script>
 <script>
